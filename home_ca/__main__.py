@@ -17,7 +17,7 @@ def main() -> None:
 
     for host in CONFIG.hosts:
         name = host.names[0]
-        names = [f'{name}.{CONFIG.domain}' for name in host.names] + [ip_address(ip) for ip in host.ip_addresses]
+        names = [(name if '.' in name else f'{name}.{CONFIG.domain}') for name in host.names] + [ip_address(ip) for ip in host.ip_addresses]
 
         host_key = certs.generate_or_load_key(output_path / f'{name}.key.pem')
         host_cert = certs.generate_or_load_server_certificate(

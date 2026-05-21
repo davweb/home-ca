@@ -6,23 +6,10 @@ Generate a Certificate Authority and server certificates for a home network.
 
 1. Clone this repository.
 
-2. Set up a python virtual environment with:
+2. Set up a python virtual environment and install required packages with:
 
     ```bash
-    python -m venv --prompt home-ca .venv
-    ```
-
-3. Source the virtual environment with:
-
-    ```bash
-    source .venv/bin/activate
-    ```
-
-4. Install required packages using `pip`:
-
-    ```bash
-    pip install --upgrade pip pip-tools
-    pip-sync
+    uv sync
     ```
 
 ## How to Use
@@ -32,13 +19,13 @@ Generate a Certificate Authority and server certificates for a home network.
 2. Run the script with:
 
     ```bash
-    python -m home_ca
+    uv run -m home_ca
     ```
 
     You can specify a different configuration file using the `-f` or `--config-file` flag:
 
     ```bash
-    python -m home_ca --config-file other-network.yaml
+    uv run -m home_ca --config-file other-network.yaml
     ```
 
     The script will output certificates and keys to the `certificates` directory.  This can be change in the configuration file or by using the `-o` or `--output-directory` command line flag.
