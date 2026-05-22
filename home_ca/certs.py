@@ -8,6 +8,7 @@ from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.serialization import pkcs12
 from .config import CONFIG
 
 
@@ -29,11 +30,7 @@ def generate_or_load_key(key_file: Path) -> rsa.RSAPrivateKey:
     )
 
     with open(key_file, 'wb') as file:
-        file.write(private_key.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.NoEncryption(),
-        ))
+        file.write(serialize_key(private_key))
 
     return private_key
 
@@ -146,3 +143,23 @@ def generate_or_load_server_certificate(
 def serialize_certificate(cert: x509.Certificate) -> bytes:
     """Serialize a certificate to bytes"""
     return cert.public_bytes(serialization.Encoding.PEM)
+
+
+def serialize_key(key: rsa.RSAPrivateKey) -> bytes:
+    """Serialize a private key to PEM bytes"""
+    return key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption(),
+    )
+
+
+def serialize_pfx(name: str, key: rsa.RSAPrivateKey, cert: x509.Certificate, ca_cert: x509.Certificate) -> bytes:
+    """Serialize a key + cert + CA chain to PKCS#12 (PFX) bytes"""
+    return pkcs12.serialize_key_and_certificates(
+        name=name.encode(),
+        key=key,
+        cert=cert,
+        cas=[ca_cert],
+        encryption_algorithm=serialization.BestAvailableEncryption(b"password"),
+    )

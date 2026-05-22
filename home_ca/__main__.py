@@ -28,12 +28,26 @@ def main() -> None:
             names
         )
 
-        chain_file = output_path / f'{name}.chain.pem'
+        chain_file = output_path / f'{name}.fullchain.pem'
 
         if not chain_file.exists():
             with chain_file.open(mode='wb') as file:
-                file.write(certs.serialize_certificate(ca_cert))
                 file.write(certs.serialize_certificate(host_cert))
+                file.write(certs.serialize_certificate(ca_cert))
+
+        combined_file = output_path / f'{name}.combined.pem'
+
+        if not combined_file.exists():
+            with combined_file.open(mode='wb') as file:
+                file.write(certs.serialize_certificate(host_cert))
+                file.write(certs.serialize_certificate(ca_cert))
+                file.write(certs.serialize_key(host_key))
+
+        pfx_file = output_path / f'{name}.combined.pfx'
+
+        if not pfx_file.exists():
+            with pfx_file.open(mode='wb') as file:
+                file.write(certs.serialize_pfx(name, host_key, host_cert, ca_cert))
 
 
 if __name__ == '__main__':
