@@ -38,10 +38,10 @@ Generate a Certificate Authority and server certificates for a home network.
     | File | Description | Used By |
     |------|-------------|---------|
     | `<server>.key.pem` | the private key | |
-    | `<server>.cert.pem` | the signed server certificate | |
+    | `<server>.cert.pem` | the signed server certificate | qBittorrent |
     | `<server>.fullchain.pem` | the full certificate chain for the server | |
     | `<server>.combined.pem` | the key and full certificate chain for the server | pi-hole |
-    | `<server>.combined.pfx` | the key and full certificate chain for the server in PFX format, with password `password` | HP Printer |
+    | `<server>.combined.pfx` | the key and full certificate chain for the server in PFX format, with password `password` | HP Printer, Plex |
 
 3. _Optional -_ Use the `validate-certificates.sh` and `display-certificates.sh` scripts to validate the output.  These scripts take a directory as an optional argument; if none is supplied they look in the `certificates` directory.
 
